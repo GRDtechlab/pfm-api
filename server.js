@@ -1,0 +1,24 @@
+import express from "express";
+import { config } from "dotenv";
+import cors from "cors";
+
+import router from "./routes/pfm-routes.js";
+import errorHandler from "./middleware/error-handler.js";
+
+const app = express();
+const dotEnv = config();
+const port = process.env.PORT || 5001;
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+
+app.use(express.json()); // This is required to enable of getting data from client side to our apis.
+
+app.use("/api/pfm", router); // here /api/pfm is our default route for all setup by middleware app.use
+
+app.use(errorHandler); // This is middleware to handle global error handlers for apis.
+
+app.listen(port, () => console.log("server-started... on port ", port));
