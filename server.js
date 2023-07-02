@@ -4,6 +4,7 @@ import cors from "cors";
 
 import router from "./routes/pfm-routes.js";
 import errorHandler from "./middleware/error-handler.js";
+import connectDb from "./config/db-connection.js";
 
 const app = express();
 const dotEnv = config();
@@ -14,6 +15,8 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
+
+connectDb();
 
 app.use(express.json()); // This is required to enable of getting data from client side to our apis.
 
