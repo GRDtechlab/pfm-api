@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 // import { Schema } from "mongoose";
 const pfmDashboardSchema = new mongoose.Schema(
   {
+    grand_total: {
+      type: Number,
+      required: [true, "Grand_Total field is required."],
+    },
     total_savings: {
       type: Number,
       required: [true, "Please add total_saved filed"],
@@ -17,6 +21,14 @@ const pfmDashboardSchema = new mongoose.Schema(
     availableBalance: {
       type: Number,
       required: [true, "Please add availableBalance filed"],
+    },
+    transactions: {
+      debited: {
+        type: Number,
+      },
+      credited: {
+        type: Number,
+      },
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,

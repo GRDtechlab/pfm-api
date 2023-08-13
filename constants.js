@@ -4,6 +4,7 @@ const PFM_ERROR_CODES = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   SERVER: 500,
+  INSUFFICIENT_FUNDS: 51,
 };
 
 export default PFM_ERROR_CODES;

@@ -1,19 +1,10 @@
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 import dashboard from "../models/pfm-models.js";
-import user from "../models/users-models.js";
+import transactions from "../models/pfm-transactions-models.js";
 
 // here asyncHandler is used to remove try=catch block.
 // whenever error occurs error will be therown to our error_handler.js file
-
-//@desc Get User By ID
-//@route GET /api/PFM/user/:id
-//@access public
-const getPfmUserById = asyncHandler(async (req, res) => {
-  console.log(`Users request body is ${JSON.stringify(req.params.id)}`);
-  const data = await user.find({});
-  res.status(200).json(data[0]);
-});
 
 //@desc Get Dashboard Data by user.
 //@route GET /api/PFM/dashboard/:userid
@@ -30,7 +21,7 @@ const getPfmDashboardByUser = asyncHandler(async (req, res) => {
 //@desc Create new PFM
 //@route POST /api/PFM//dashboard/:userid
 //@access public
-const createPFMDashboard = asyncHandler((req, res) => {
+const createPFMDashboard = asyncHandler(async (req, res) => {
   console.log(`request body is ${JSON.stringify(req.body)}`);
 
   const { total_savings, salary_pm, limit_pm, availableBalance, user_id } =
@@ -47,11 +38,81 @@ const createPFMDashboard = asyncHandler((req, res) => {
     res.status(400);
     throw new Error("All fields are mandatory");
   }
-  const pfmDashboardCreate = dashboard.create({
+
+  const transactionsData = await transactions.aggregate([
+    {
+      $match: {
+        user_id: {
+          $eq: user_id,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          type: "$transaction_type",
+        },
+        count: {
+          $count: {},
+        },
+        sum: {
+          $sum: "$transaction_amount",
+        },
+      },
+    },
+  ]);
+
+  let debitAmount = 0;
+  let creditAmount = 0;
+  console.log(transactionsData);
+  if (transactionsData.length > 0) {
+    let filterDebit = transactionsData.filter(
+      ({ _id }) => _id.type === "debit"
+    );
+    filterDebit.length > 0
+      ? (debitAmount = filterDebit[0]["sum"])
+      : (debitAmount = 0);
+
+    let filterCredit = transactionsData.filter(
+      ({ _id }) => _id.type === "credit"
+    );
+    filterCredit.length > 0
+      ? (creditAmount = filterCredit[0]["sum"])
+      : (creditAmount = 0);
+  }
+
+  // console.log({ debitAmount });
+  // console.log({ creditAmount });
+  // console.log("..................");
+  // console.log(transactionsData);
+  // console.log("........................");
+
+  let transaction = {
+    transactions: { debited: debitAmount, credited: creditAmount },
+  };
+
+  // let finalObj = {
+  //   total_savings,
+  //   salary_pm,
+  //   limit_pm,
+  //   availableBalance,
+  //   user_id,
+  //   ...transaction,
+  // };
+
+  // console.log("final obj");
+  // console.log(finalObj);
+
+  let grand_total = availableBalance + limit_pm + total_savings;
+  console.log({ grand_total });
+
+  const pfmDashboardCreate = await dashboard.create({
+    grand_total,
     total_savings,
     salary_pm,
     limit_pm,
     availableBalance,
+    ...transaction,
     user_id,
   });
   res.status(201).json(pfmDashboardCreate);
@@ -93,5 +154,4 @@ export {
   getPFM_BY_ID,
   updatePfmDashboard,
   deletePFM,
-  getPfmUserById,
 };

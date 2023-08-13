@@ -12,6 +12,13 @@ const errorHandler = (err, req, res, next) => {
         statckTrace: err.statck,
       });
       break;
+    case PFM_ERROR_CODES.INSUFFICIENT_FUNDS:
+      res.json({
+        title: "Transaction Declined. Due to insufficient funds",
+        error: err.message,
+        statckTrace: err.statck,
+      });
+      break;
     case PFM_ERROR_CODES.NOT_FOUND:
       res.json({
         title: "Not Found",

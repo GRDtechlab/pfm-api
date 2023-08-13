@@ -20,7 +20,7 @@ const createPfmRecord = asyncHandler(async (req, res) => {
   const { bank, user_id } = req.body;
   console.log(`Bank record is: ${JSON.stringify(bank)}`);
 
-  const pfmRecordCreate = records.create({
+  const pfmRecordCreate = await records.create({
     bank,
     user_id,
   });
