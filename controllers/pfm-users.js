@@ -101,7 +101,7 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
     res.cookie("jwt", `${accessToken}split${refreshToken}`, {
       httpOnly: true,
       secure: true,
-      sameSite: "strict", //  Enforce secure cookies & // Prevent CSRF attacks by setting sameSite
+      sameSite: "none", //  Enforce secure cookies & // Prevent CSRF attacks by setting sameSite
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
     res.status(200).json({
