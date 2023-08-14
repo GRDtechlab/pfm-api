@@ -18,6 +18,9 @@ const pfmUsersSchema = new mongoose.Schema(
     password: {
       type: String,
     },
+    refresh_token: {
+      type: String,
+    },
   },
   {
     timestamps: true,

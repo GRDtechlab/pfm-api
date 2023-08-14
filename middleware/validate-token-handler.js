@@ -1,5 +1,7 @@
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
+import user from "../models/pfm-users-models.js";
+
 const { verify, sign } = jwt;
 
 const generateRefreshToken = (refreshToken, req, res, next) => {
@@ -37,6 +39,13 @@ const generateRefreshToken = (refreshToken, req, res, next) => {
 };
 
 const validateToken = asyncHandler(async (req, res, next) => {
+  const isRefreshTokenAvailableAtDB = await user.findOne({
+    refresh_token: { $ne: null },
+  });
+  if (!isRefreshTokenAvailableAtDB) {
+    res.status(401);
+    throw new Error("User is not authorized or token is missing. Login Again.");
+  }
   if (!req.headers.cookie) {
     res.status(401);
     throw new Error("User is not authorized or token is missing.");

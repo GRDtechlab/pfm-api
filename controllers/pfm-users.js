@@ -72,7 +72,7 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
   const isUserLoggedIn = await user.findOne({ email });
 
   if (isUserLoggedIn && (await compare(password, isUserLoggedIn.password))) {
-    const user = {
+    const userObject = {
       _id: isUserLoggedIn._id,
       firstname: isUserLoggedIn.firstname,
       lastname: isUserLoggedIn.lastname,
@@ -82,7 +82,7 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
     const accessToken = sign(
       {
         user: {
-          ...user,
+          ...userObject,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -91,25 +91,33 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
     const refreshToken = sign(
       {
         user: {
-          ...user,
+          ...userObject,
         },
       },
       process.env.REFRESH_TOKEN_SECRET
     );
 
+    const isRefreshTokenAddedToDB = await user.updateOne(
+      { _id: isUserLoggedIn._id },
+      { $set: { refresh_token: refreshToken } },
+      { upsert: true }
+    );
+
     res.clearCookie("jwt");
+
     res.cookie("jwt", `${accessToken}split${refreshToken}`, {
       httpOnly: true,
       secure: true,
       sameSite: "none", //  Enforce secure cookies & // Prevent CSRF attacks by setting sameSite
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
+
     res.status(200).json({
       message: "You logged in successfully!",
       auth: {
         accessToken,
         user: {
-          ...user,
+          ...userObject,
         },
       },
     });
@@ -123,12 +131,20 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
 //@route POST /api/PFM/user/logout
 //@access public
 const pfmUserLogout = asyncHandler(async (req, res) => {
+  const { _id } = req.body;
   if (!req.headers.cookie) {
     res.status(401);
     throw new Error("User is not authorized or token is missing.");
   }
   let aToken = req.headers.cookie.split("=")[1].split("split")[0];
   let rToken = req.headers.cookie.split("=")[1].split("split")[1];
+
+  let deleteRefreshTokenFromDB = await user.updateOne(
+    { _id },
+    { $unset: { refresh_token: 1 } }
+  );
+
+  console.log("Logged out...");
 
   res.clearCookie("jwt");
   res.status(201).json({ message: "User logged out" });
