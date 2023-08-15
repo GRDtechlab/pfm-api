@@ -110,7 +110,7 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
       secure: true,
       sameSite: "None", //  Enforce secure cookies & // Prevent CSRF attacks by setting sameSite
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      domain: "https://pfm-api.vercel.app",
+      domain: "http://localhost:5173/",
     });
 
     res.status(200).json({
@@ -145,7 +145,7 @@ const pfmUserLogout = asyncHandler(async (req, res) => {
     { $unset: { refresh_token: 1 } }
   );
 
-  res.clearCookie("jwt", { path: "/", domain: "https://pfm-api.vercel.app" });
+  res.clearCookie("jwt", { path: "/", domain: "http://localhost:5173/" });
   console.log("Logged out...");
 
   res.status(201).json({ message: "User logged out" });
