@@ -104,7 +104,7 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
     );
 
     res.clearCookie("jwt");
-
+    console.log("Cookie is being set...");
     res.cookie("jwt", `${accessToken}split${refreshToken}`, {
       httpOnly: true,
       secure: true,
