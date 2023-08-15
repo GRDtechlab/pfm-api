@@ -39,6 +39,8 @@ const generateRefreshToken = (refreshToken, req, res, next) => {
 };
 
 const validateToken = asyncHandler(async (req, res, next) => {
+  console.log("..............Cookie Headers................");
+  console.log(req.headers.cookie);
   const isRefreshTokenAvailableAtDB = await user.findOne({
     refresh_token: { $ne: null },
   });
