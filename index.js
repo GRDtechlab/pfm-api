@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import router from "./routes/pfm-routes.js";
 import errorHandler from "./middleware/error-handler.js";
@@ -18,6 +19,8 @@ app.use(
 );
 
 connectDb();
+
+app.use(cookieParser()); // This is cookie middleware.
 
 app.use(express.json()); // This is required to enable of getting data from client side to our apis.
 
