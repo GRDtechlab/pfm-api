@@ -145,7 +145,10 @@ const pfmUserLogout = asyncHandler(async (req, res) => {
     { $unset: { refresh_token: 1 } }
   );
 
-  res.clearCookie("jwt", { path: "/", domain: "http://localhost:5173/" });
+  res.clearCookie("jwt", {
+    path: "/",
+    domain: "https://pfm-api.vercel.app/api/pfm/user/userloggedin",
+  });
   console.log("Logged out...");
 
   res.status(201).json({ message: "User logged out" });
