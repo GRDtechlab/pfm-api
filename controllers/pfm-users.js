@@ -107,7 +107,7 @@ const pfmUserLogin = asyncHandler(async (req, res) => {
 
     res.cookie("jwt", `${accessToken}split${refreshToken}`, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "none", //  Enforce secure cookies & // Prevent CSRF attacks by setting sameSite
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
@@ -144,7 +144,7 @@ const pfmUserLogout = asyncHandler(async (req, res) => {
     { $unset: { refresh_token: 1 } }
   );
 
-  res.clearCookie("jwt", { httpOnly: true, secure: false, sameSite: "none" });
+  res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "none" });
   console.log("Logged out...");
 
   res.status(201).json({ message: "User logged out" }).end();
