@@ -145,6 +145,7 @@ const pfmUserLogout = asyncHandler(async (req, res) => {
   );
 
   res.clearCookie("jwt");
+  res.cookie(jwt, "", { expires: "1970 - 01 - 01" });
   console.log("Logged out...");
 
   res.status(201).json({ message: "User logged out" });
