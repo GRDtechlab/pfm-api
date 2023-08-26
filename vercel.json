@@ -15,7 +15,7 @@
     "crons":[
         {
             "path":"/api/pfm",
-            "schedule":"* * * * * *"
+            "schedule":"*/10 * * * *"
         }
     ]
  }
