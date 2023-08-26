@@ -13,8 +13,7 @@ const cronjob_update_balance_each_month = () => {
       console.log("cron-job running...");
     },
     null,
-    true,
-    "Asia/Kolkata"
+    true
   );
 };
 
