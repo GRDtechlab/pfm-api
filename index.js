@@ -37,4 +37,4 @@ app.listen(port, () => console.log("server-started... on port ", port));
 
 // Call cron jobs..
 
-cronjob_update_balance_each_month();
+// cronjob_update_balance_each_month();

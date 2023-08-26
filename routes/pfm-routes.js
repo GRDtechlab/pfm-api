@@ -32,7 +32,10 @@ import validateToken from "../middleware/validate-token-handler.js";
 
 const router = express.Router();
 
-router.route("/").get((req, res) => res.send("Hello world"));
+router.route("/").get((req, res) => {
+  console.log("Cron job from vercel executes on path /api/pfm");
+  res.send("Hello world");
+});
 
 // Refer controllers folder for each code of the below rotes.
 
