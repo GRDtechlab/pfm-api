@@ -14,8 +14,8 @@
     ],
     "crons":[
         {
-            "path":"/api/pfm",
-            "schedule":"00 34 14 26 * *"
+            "path":"/",
+            "schedule":"00 45 14 26 * *"
         }
     ]
  }
