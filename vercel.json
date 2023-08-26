@@ -14,7 +14,7 @@
     ],
     "crons":[
         {
-            "path":"/",
+            "path":"/api/pfm",
             "schedule":"* * * * *"
         }
     ]
