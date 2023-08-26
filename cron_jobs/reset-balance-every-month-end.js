@@ -5,7 +5,12 @@ import { CronJob } from "cron";
 
 const cronjob_update_balance_each_month = () => {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log({ timezone });
+  console.log(
+    { timezone },
+    new Date().getHours(),
+    new Date().getMinutes(),
+    new Date().getTime()
+  );
   // "00 00 00 1 * *", --  Below scrhedule will run at every start of the new month at 12:00 am.
   const job = new CronJob(
     "00 10 14 26 * *",
