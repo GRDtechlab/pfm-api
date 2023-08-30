@@ -105,12 +105,13 @@ const createPFMDashboard = asyncHandler(async (req, res) => {
 
   let grand_total = availableBalance + limit_pm + total_savings;
   console.log({ grand_total });
-
+  let base_limit_pm = limit_pm;
   const pfmDashboardCreate = await dashboard.create({
     grand_total,
     total_savings,
     salary_pm,
     limit_pm,
+    base_limit_pm,
     availableBalance,
     ...transaction,
     user_id,
@@ -130,8 +131,9 @@ const getPFM_BY_ID = asyncHandler((req, res) => {
 //@access public
 const updatePfmDashboard = asyncHandler(async (req, res) => {
   const _id = { _id: req.params.id };
-  const updateData = req.body;
-
+  const updateData = { ...req.body, base_limit_pm: req.body.limit_pm };
+  console.log(".....................");
+  console.log(updateData);
   const result = await dashboard.findOneAndUpdate(_id, updateData);
 
   if (!result) {

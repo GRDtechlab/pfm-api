@@ -37,6 +37,6 @@ app.use(errorHandler); // This is middleware to handle global error handlers for
 
 app.listen(port, () => console.log("server-started... on port ", port));
 
-// Cron job
+// // Cron job
 
-cronjob_update_balance_each_month();
+// cronjob_update_balance_each_month();

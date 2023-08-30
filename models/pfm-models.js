@@ -14,6 +14,9 @@ const pfmDashboardSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Please add limit_pm filed"],
     },
+    base_limit_pm: {
+      type: Number,
+    },
     salary_pm: {
       type: Number,
       required: [true, "Please add salary filed"],
