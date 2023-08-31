@@ -6,10 +6,32 @@ import dashboard from "../models/pfm-models.js";
 //@route GET /api/PFM/transactions/:userid
 //@access public
 const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
-  console.log("get-transactions-called");
+  console.log("get-transactions-called", new Date().getFullYear());
+
+  // Below find operation will give us transactions record by current month and year
   const data = await transactions
     .find({
-      user_id: req.params.userid,
+      $expr: {
+        $and: [
+          { $eq: ["$user_id", req.params.userid] },
+          {
+            $eq: [
+              {
+                $month: "$createdAt",
+              },
+              new Date().getMonth() + 1,
+            ],
+          },
+          {
+            $eq: [
+              {
+                $year: "$createdAt",
+              },
+              new Date().getFullYear(),
+            ],
+          },
+        ],
+      },
     })
     .sort({ createdAt: -1 });
   console.log("data :", JSON.stringify(data));
