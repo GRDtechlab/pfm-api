@@ -48,14 +48,15 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
   const timezone = "Asia/Kolkata";
   const zonedDate = utcToZonedTime(utcDate, timezone);
 
-  const pattern = "d/M/yyyy HH:mm:ss.SSS 'GMT' XXX (z)";
+  const pattern = "yyyy-MM-dd HH:mm:ss.SSS 'GMT' XXX (z)";
   const output = format(zonedDate, pattern, { timezone });
 
   res.status(200).json({
     utcDate: new Date(),
-    date: new Date().toLocaleDateString(),
-    month: new Date(dateLocal).getMonth() + 1,
-    hour: timeLocal,
+    date: new Date(output).toDateString(),
+    year: new Date(output).getFullYear(),
+    month: new Date(output).getMonth() + 1,
+    hour: new Date(output).toTimeString(),
     dateLocal,
     timezone: new Date().getTimezoneOffset(),
     output,
