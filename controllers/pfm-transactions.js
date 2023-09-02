@@ -14,6 +14,13 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
     new Date().getHours()
   );
 
+  let utcDate = new Date();
+  const timezone = "Asia/Kolkata";
+  const zonedDate = utcToZonedTime(utcDate, timezone);
+
+  const pattern = "yyyy-MM-dd HH:mm:ss.SSS 'GMT' XXX (z)";
+  const output = format(zonedDate, pattern, { timezone });
+
   // Below find operation will give us transactions record by current month and year
   const data = await transactions
     .find({
@@ -25,7 +32,7 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
               {
                 $month: "$createdAt",
               },
-              new Date().getMonth() + 1,
+              new Date(output).getMonth() + 1,
             ],
           },
           {
@@ -33,7 +40,7 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
               {
                 $year: "$createdAt",
               },
-              new Date().getFullYear(),
+              new Date(output).getFullYear(),
             ],
           },
         ],
@@ -41,27 +48,8 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
     })
     .sort({ createdAt: -1 });
   console.log("data :", JSON.stringify(data));
-  let timeLocal = new Date().toLocaleTimeString();
-  let dateLocal = new Date().toDateString();
 
-  let utcDate = new Date();
-  const timezone = "Asia/Kolkata";
-  const zonedDate = utcToZonedTime(utcDate, timezone);
-
-  const pattern = "yyyy-MM-dd HH:mm:ss.SSS 'GMT' XXX (z)";
-  const output = format(zonedDate, pattern, { timezone });
-
-  res.status(200).json({
-    utcDate: new Date(),
-    date: new Date(output).toDateString(),
-    year: new Date(output).getFullYear(),
-    month: new Date(output).getMonth() + 1,
-    hour: new Date(output).toTimeString(),
-    dateLocal,
-    timezone: new Date().getTimezoneOffset(),
-    output,
-    ...data,
-  });
+  res.status(200).json({ data });
 });
 
 //@desc POST Transactions Data by User.
