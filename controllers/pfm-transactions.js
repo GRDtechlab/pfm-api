@@ -39,10 +39,15 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
     })
     .sort({ createdAt: -1 });
   console.log("data :", JSON.stringify(data));
-  let hour = new Date().toLocaleString("en/US", { timeZone: "Asia/Kolkata" });
+  let timeLocal = new Date().toLocaleTimeString();
+  let dateLocal = new Date().toDateString();
   res.status(200).json({
-    date: new Date().toLocaleString("en/US", { timeZone: "Asia/Kolkata" }),
-    hour: new Date(hour).getHours(),
+    utcDate: new Date(),
+    date: new Date().toLocaleDateString(),
+    month: new Date(dateLocal).getMonth() + 1,
+    hour: timeLocal,
+    dateLocal,
+    timezone: new Date().getTimezoneOffset(),
     ...data,
   });
 });
