@@ -1,4 +1,6 @@
 import asyncHandler from "express-async-handler";
+import { utcToZonedTime } from "date-fns-tz";
+import { format } from "date-fns";
 import transactions from "../models/pfm-transactions-models.js";
 import dashboard from "../models/pfm-models.js";
 
@@ -41,6 +43,14 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
   console.log("data :", JSON.stringify(data));
   let timeLocal = new Date().toLocaleTimeString();
   let dateLocal = new Date().toDateString();
+
+  let utcDate = new Date();
+  const timezone = "Asia/Kolkata";
+  const zonedDate = utcToZonedTime(utcDate, timezone);
+
+  const pattern = "d/M/yyyy HH:mm:ss.SSS 'GMT' XXX (z)";
+  const output = format(zonedDate, pattern, { timezone });
+
   res.status(200).json({
     utcDate: new Date(),
     date: new Date().toLocaleDateString(),
@@ -48,6 +58,7 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
     hour: timeLocal,
     dateLocal,
     timezone: new Date().getTimezoneOffset(),
+    output,
     ...data,
   });
 });
