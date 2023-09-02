@@ -39,7 +39,9 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
     })
     .sort({ createdAt: -1 });
   console.log("data :", JSON.stringify(data));
-  res.status(200).json(data);
+  res
+    .status(200)
+    .json({ date: new Date(), hour: new Date().getHours(), ...data });
 });
 
 //@desc POST Transactions Data by User.
