@@ -1,8 +1,7 @@
 import asyncHandler from "express-async-handler";
-import { utcToZonedTime } from "date-fns-tz";
-import { format } from "date-fns";
 import transactions from "../models/pfm-transactions-models.js";
 import dashboard from "../models/pfm-models.js";
+import getIST_Date from "../utils/getDateUtcToIst.js";
 
 //@desc Get Transactions Data by User.
 //@route GET /api/PFM/transactions/:userid
@@ -14,14 +13,12 @@ const getPfmTransactionsByUser = asyncHandler(async (req, res) => {
     new Date().getHours()
   );
 
-  let utcDate = new Date();
-  const timezone = "Asia/Kolkata";
-  const zonedDate = utcToZonedTime(utcDate, timezone);
-
-  const pattern = "yyyy-MM-dd HH:mm:ss.SSS 'GMT' XXX (z)";
-  const output = format(zonedDate, pattern, { timezone });
+  const output = getIST_Date();
 
   // Below find operation will give us transactions record by current month and year
+  // console.log("...................");
+  // console.log(await transactions.find({ user_id: req.params.userid }));
+  // console.log(".....................");
   const data = await transactions
     .find({
       $expr: {

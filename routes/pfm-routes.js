@@ -28,6 +28,9 @@ import {
   pfmCheckUserIsLoggedIn,
   pfmCheckEmailAvailability,
 } from "../controllers/pfm-users.js";
+
+import { getPfmReportsByPreviousMonths } from "../controllers/pfm-reports.js";
+
 import validateToken from "../middleware/validate-token-handler.js";
 
 const router = express.Router();
@@ -62,5 +65,9 @@ router
   .route("/transactions/:userid")
   .get(getPfmTransactionsByUser)
   .post(createPfmTransactions);
+
+router
+  .route("/reports/previousMonths/:userid")
+  .get(getPfmReportsByPreviousMonths);
 
 export default router;
