@@ -131,9 +131,22 @@ const getPFM_BY_ID = asyncHandler((req, res) => {
 //@access public
 const updatePfmDashboard = asyncHandler(async (req, res) => {
   const _id = { _id: req.params.id };
-  const updateData = { ...req.body, base_limit_pm: req.body.limit_pm };
+
+  /*
+    : NOTE : [20/MARCH/2024]
+          
+          Removed this statement to checkout when dashboard data updated.
+          We do not need to mannually update base_limit_pm".
+          So, today at 20/03/2024 I updated below line and commented out old line for future reference.
+      
+    const updateData = { ...req.body, base_limit_pm: req.body.limit_pm };
+  */
+
+  const updateData = { ...req.body };
+
   console.log(".....................");
   console.log(updateData);
+
   const result = await dashboard.findOneAndUpdate(_id, updateData);
 
   if (!result) {
